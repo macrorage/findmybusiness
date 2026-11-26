@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#11, website checker)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#12, Find prospects UI)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -37,7 +37,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#11, websit
    - [ ] Still open: first live run (👤 H1) to confirm the keyword strategy and that `language_code: "en"` gives English categories; DB cache (`api_cache`) and dedupe on save (needs Supabase).
 9. [x] `src/lib/classify/`: rule-based labels + phone type / contact channels via libphonenumber-js. Golden set passes.
 10. [x] `src/lib/score/`: lead score with a breakdown (PRODUCT §5.3).
-11. [ ] `src/lib/checker/`: website checks + Playwright screenshot → Gemini Flash outdated score (PRODUCT §5.4).
+11. [x] `src/lib/checker/`: HTML checks + rule score, public-URL guard, Playwright phone screenshot → `outdated_vision` AI score (prompt `src/prompts/outdated_vision.md` v1), rules fallback.
+   - [ ] Still open: live AI scoring needs keys (👤 H1). Chromium: `pnpm exec playwright install chromium` once per machine.
 12. [ ] UI: "Find prospects" page (trade dropdown in Slovenian + city) → ranked table with label badges, reasons, channels and cost.
 13. [ ] `src/lib/registry/`: **research only**: AJPES/ePRS and bizi.si access and terms → `docs/decisions/0001-registry-access.md`. No scraping.
 
@@ -101,6 +102,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#11, websit
 | 2026-11-26 | One switch `AI_PROVIDER_MODE` (mock/live) controls AI **and** Maps data; mock Maps = deterministic "Demo …" businesses | One place to go live; UI demoable without keys | claude |
 | 2026-11-26 | DataForSEO query: keyword = local trade word + city, `location_name` = country, `language_code: "en"` | No dependency on exact DataForSEO city names; English categories match trade configs. Verify on first live run | claude |
 | 2026-11-26 | Chain rules: known-name list, ≥1000 reviews, or same name in ≥3 cities of one batch. Chat channels only for MOBILE numbers (libphonenumber-js `max` metadata) | Simple, testable first version; tune after validation | claude |
+| 2026-11-26 | Checker: outdated if score ≥ 3 (1 = modern, 5 = very old); unreachable site = score 5; only public http(s) URLs are fetched | A broken site is a strong lead; Maps URLs are untrusted input | claude |
+| 2026-11-26 | Real-browser tests are opt-in (`RUN_BROWSER_TESTS=1`) | Default suite stays offline and fast | claude |
 | 2026-11-26 | No dentist/health trade yet | Healthcare advertising has extra rules; add after the legal check (H3) | claude |
 
 ---
@@ -114,6 +117,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#11, websit
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · Website checker (Next up #11)
+- Did: `src/lib/checker/` (html.ts checks + rule score, url-guard.ts, index.ts checkWebsite + takeScreenshot), first prompt file `src/prompts/outdated_vision.md`, Playwright + Chromium installed. 11 new tests + 1 opt-in browser test.
+- Verified: `pnpm check` passes (92 tests); browser smoke test passed (real screenshot of example.com).
+- Next tool should: start #12.
 
 ### 2026-11-26 · claude · Maps client, classifier, lead score (Next up #8–#10)
 - Did: `src/lib/maps/` (DataForSEO request + lenient parsing, cost estimate, demo source), `src/lib/classify/` (closed/chain/social/own-site rules, phone type + channels), `src/lib/score/` (points + breakdown). Fixed fake landline numbers in the golden set (some were really mobile prefixes). 27 new tests.
