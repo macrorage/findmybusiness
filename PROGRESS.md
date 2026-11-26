@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#12, Find prospects UI)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#13, registry research)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -39,7 +39,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#12, Find p
 10. [x] `src/lib/score/`: lead score with a breakdown (PRODUCT §5.3).
 11. [x] `src/lib/checker/`: HTML checks + rule score, public-URL guard, Playwright phone screenshot → `outdated_vision` AI score (prompt `src/prompts/outdated_vision.md` v1), rules fallback.
    - [ ] Still open: live AI scoring needs keys (👤 H1). Chromium: `pnpm exec playwright install chromium` once per machine.
-12. [ ] UI: "Find prospects" page (trade dropdown in Slovenian + city) → ranked table with label badges, reasons, channels and cost.
+12. [x] UI: `/find` page (`src/app/find/`) → ranked table with label badges, score breakdown (hover), formatted phones, channels, reasons, skipped section, cost. Pipeline in `src/lib/finder/`. Checked in the browser (desktop + phone width, no console errors).
+   - [ ] Still open: save results to the DB (needs Supabase), "check website" button for `needs_check` leads, login before any deployment (live searches are blocked in production builds until then).
 13. [ ] `src/lib/registry/`: **research only**: AJPES/ePRS and bizi.si access and terms → `docs/decisions/0001-registry-access.md`. No scraping.
 
 **Phase 2+:** see PRODUCT §10 (roadmap).
@@ -104,6 +105,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#12, Find p
 | 2026-11-26 | Chain rules: known-name list, ≥1000 reviews, or same name in ≥3 cities of one batch. Chat channels only for MOBILE numbers (libphonenumber-js `max` metadata) | Simple, testable first version; tune after validation | claude |
 | 2026-11-26 | Checker: outdated if score ≥ 3 (1 = modern, 5 = very old); unreachable site = score 5; only public http(s) URLs are fetched | A broken site is a strong lead; Maps URLs are untrusted input | claude |
 | 2026-11-26 | Real-browser tests are opt-in (`RUN_BROWSER_TESTS=1`) | Default suite stays offline and fast | claude |
+| 2026-11-26 | `/find` is a server-rendered GET form (no client JS); the results part reads `searchParams` inside `<Suspense>` | Required by Next 16 Cache Components; shareable URLs | claude |
+| 2026-11-26 | Production builds refuse live searches until login exists (override: `SPLETKO_ALLOW_UNAUTHENTICATED_LIVE=1`) | A deployed page must not be able to run up API costs | claude |
 | 2026-11-26 | No dentist/health trade yet | Healthcare advertising has extra rules; add after the legal check (H3) | claude |
 
 ---
@@ -117,6 +120,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#12, Find p
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · Find prospects page (Next up #12)
+- Did: `src/lib/finder/` (query validation, pipeline, live-mode guard), `src/app/find/page.tsx` + `format.ts`, home page link, reason/signal/finder strings (sl + en), `formatUsdMicros`, `formatPhone`, `.claude/launch.json` (dev server on port 3123). 3 new tests.
+- Verified: `pnpm check` passes (95 tests); page checked in the browser pane (desktop and 375 px, HR and SI queries, no console errors, no page-level horizontal scroll).
+- Next tool should: start #13 (research only).
 
 ### 2026-11-26 · claude · Website checker (Next up #11)
 - Did: `src/lib/checker/` (html.ts checks + rule score, url-guard.ts, index.ts checkWebsite + takeScreenshot), first prompt file `src/prompts/outdated_vision.md`, Playwright + Chromium installed. 11 new tests + 1 opt-in browser test.

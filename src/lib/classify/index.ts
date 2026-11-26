@@ -105,6 +105,11 @@ function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+/** "+38641000001" → "+386 41 000 001" for display. Returns the input if it can't be parsed. */
+export function formatPhone(e164: string): string {
+  return parsePhoneNumberFromString(e164)?.formatInternational() ?? e164;
+}
+
 export function analysePhone(raw: string | undefined, country: string): {
   e164?: string;
   type: PhoneType;

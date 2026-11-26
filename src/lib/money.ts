@@ -25,3 +25,14 @@ export function formatMoney(value: Money, locale: string = "sl"): string {
     currency: value.currency,
   }).format(value.cents / 100);
 }
+
+/** Provider costs are integer micro-USD (1 USD = 1,000,000). formatUsdMicros(2000, "sl") → "0,002 USD". */
+export function formatUsdMicros(micros: number, locale: string = "sl"): string {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "USD",
+    currencyDisplay: "code",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4,
+  }).format(micros / 1_000_000);
+}
