@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#6, i18n)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#7, golden set)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -29,7 +29,7 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#6, i18n)._
 4. [x] `src/lib/ai/`: provider-agnostic wrapper (Claude + Gemini), a `task → model` routing table in config, **mock provider first** (`AI_PROVIDER_MODE=mock`), Zod-validated JSON output, cost logging hook (`configureAi({ log })`).
    - [ ] Still open: a DB logger writing `ai_calls` + the monthly budget check in `beforeCall` (needs Supabase); a live smoke test with real keys (👤 H1).
 5. [x] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format (`src/lib/trades.ts`) + 7 trades in `src/trades/` (frizer, kozmeticni-salon, avtoservis, vodovodar, elektricar, gostilna, apartmaji).
-6. [ ] i18n setup with `sl` + `en` first.
+6. [x] i18n setup with `sl` + `en` (`src/i18n/`; UI language from `APP_LOCALE`, default `sl`).
 7. [ ] `tests/golden/`: 10 **invented** businesses as JSON fixtures (mixed trades; SL + HR).
 
 **Phase 1: prospect finder** (needs 👤 H1 for DataForSEO)
@@ -94,6 +94,7 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#6, i18n)._
 | 2026-11-26 | Callers use `generateText` / `generateObject(req, zodSchema)`; mock responders via `setMockResponder(task, fn)` | Typed results; mock mode fails loudly on missing fixtures | claude |
 | 2026-11-26 | Site content = `SiteCopySchema` (AI writes) + facts from data (name, phone, address, hours, legal, real reviews) in `SiteContentSchema` | The AI can't invent phones or reviews (PRODUCT §8) | claude |
 | 2026-11-26 | Trades are JSON files registered in `src/trades/index.ts` (static imports) | Works in the Next.js bundle; a test catches unregistered files | claude |
+| 2026-11-26 | UI i18n = typed dictionaries (`sl` is the source; `en: Dictionary` must match), language from `APP_LOCALE`, no locale routing | One Slovenian user in Phase 1; avoids dynamic per-request APIs; per-user locale in Phase 2 | claude |
 | 2026-11-26 | No dentist/health trade yet | Healthcare advertising has extra rules; add after the legal check (H3) | claude |
 
 ---
@@ -107,6 +108,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#6, i18n)._
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · i18n (Next up #6)
+- Did: `src/i18n/` (sl source, en, `getDictionary`, `fmt`, `intlLocale`), UI strings for finder, labels, channels, pipeline, countries. Layout `lang` and home page use it. `APP_LOCALE` in env. 3 new tests (key and placeholder parity).
+- Verified: `pnpm check` (51 tests) and `pnpm build` pass.
+- Next tool should: start #7.
 
 ### 2026-11-26 · claude · Site content schema + trades (Next up #5)
 - Did: `src/lib/sitegen/schema.ts` (languages, AI copy schema, facts, legal, reviews, gallery, full site content), `src/lib/trades.ts` + 7 trade JSONs with sl/hr/en labels, keywords, Maps categories, services. 11 new tests (incl. Claude and Gemini schema conversion).

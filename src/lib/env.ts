@@ -12,6 +12,7 @@ const EnvSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: optional,
   SUPABASE_SERVICE_ROLE_KEY: optional,
   ALLOWED_ADMIN_EMAIL: optional,
+  APP_LOCALE: z.preprocess((v) => (v === "" ? undefined : v), z.enum(["sl", "en"]).default("sl")),
   MONTHLY_BUDGET_EUR: z.preprocess((v) => (v === "" ? undefined : v), z.coerce.number().positive().default(50)),
 });
 

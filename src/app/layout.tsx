@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getDictionary, getUiLocale } from "@/i18n";
 import "./globals.css";
 
 // latin-ext covers č ć š ž đ; cyrillic covers sr-Cyrl and mk (PRODUCT §9).
@@ -14,15 +15,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spletko",
-  description: "Lokalna podjetja brez spletne strani: najdite jih in jim pokažite že izdelano stran.",
+  title: getDictionary().app.name,
+  description: getDictionary().app.tagline,
 };
 
-// lang is fixed to "sl" until i18n lands (PROGRESS Next up #6).
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="sl"
+      lang={getUiLocale()}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
