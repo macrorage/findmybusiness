@@ -31,9 +31,12 @@ Full spec: `docs/PRODUCT.md`. Live state and next tasks: `PROGRESS.md`.
 | `AGENTS.md` | Rules and the handoff protocol (this file) | Rarely. Only the human or a deliberate decision changes it |
 | `CLAUDE.md` / `GEMINI.md` | One-line pointers so each tool auto-loads this file | Never |
 | `PROGRESS.md` | **Live state**: current task, next tasks, blockers, decisions, session log | **Every session** |
-| `docs/PRODUCT.md` | Product spec: features, data, legal, roadmap | When scope changes |
+| `docs/PRODUCT.md` | Product spec: features, data, legal, roadmap, QA, risks | When scope changes |
+| `docs/SALES.md` | Offer, prices, message rules, objections (also input for outreach prompts) | When sales learnings change |
 | `docs/decisions/` | Optional longer write-ups for big decisions (`NNNN-title.md`) | Occasionally |
-| `.env.example` | Every env var the app needs, with no real values | When a new key is added |
+| `src/prompts/` | AI prompts, one file per task, with a `version:` line | When prompts are tuned |
+| `src/trades/` | One JSON config per trade (PRODUCT §5.5) | When trades are added |
+| `.env.example` | Every env var the app needs, with no real values (PRODUCT §13) | When a new key is added |
 
 Keep `AGENTS.md` and `PROGRESS.md` **short**. They are loaded into context every session and cost tokens.
 Put detail in `docs/`, and link to it.
@@ -43,13 +46,16 @@ Put detail in `docs/`, and link to it.
 ## 3. Session protocol (follow exactly)
 
 ### 3.1 Start of session (do this before writing any code)
-1. Read `AGENTS.md` (this file) and `PROGRESS.md` in full.
-2. Run `git status` and `git log --oneline -15` to see what the last tool actually did.
-3. If `PROGRESS.md` and git disagree, **git wins**. Fix `PROGRESS.md` first, then continue.
-4. Read only the sections of `docs/PRODUCT.md` and the source files that the current task needs.
+1. Run `git pull` (another tool may have pushed since you last looked).
+2. Read `AGENTS.md` (this file) and `PROGRESS.md` in full.
+3. Run `git status` and `git log --oneline -15` to see what the last tool actually did.
+4. If `PROGRESS.md` and git disagree, **git wins**. Fix `PROGRESS.md` first, then continue.
+5. Read only the sections of `docs/PRODUCT.md` and the source files that the current task needs.
    **Do not scan the whole repo.** It wastes the token budget.
-5. Take the task under **"▶ In progress"**. If that is empty, take the **top** item of **"Next up"**.
-   Move it to "In progress" and write your tool name next to it.
+6. Take the task under **"▶ In progress"**. If that is empty, take the **top** item of **"Next up"**
+   that is not waiting on a human task (`👤 H…`). Move it to "In progress" and write your tool name next to it.
+7. If the task needs something only the human can give (an account, a key, a decision), say so right
+   away and take the next unblocked task.
 
 ### 3.2 During the session
 - Work on **one task at a time**. Small, finishable steps beat big rewrites.
@@ -61,6 +67,12 @@ Put detail in `docs/`, and link to it.
   add one line to **"Decisions"** in `PROGRESS.md`, with the reason.
 - If you hit a wall you can't get past, write it under **"Blockers"** and move to the next task.
   Don't spin on it.
+
+**Definition of done** (a task is not done until all of these are true):
+- `pnpm lint`, `pnpm typecheck` and `pnpm test` pass (once these scripts exist).
+- The feature was actually **run** once (the page opened, or the function was called), not just written.
+- New env vars are in `.env.example`; new decisions are in `PROGRESS.md`.
+- No secrets and no real business data in the diff.
 
 ### 3.3 Update `PROGRESS.md` when any of these happen
 - A task is finished → move it to the session log, and update "Next up".
@@ -80,6 +92,7 @@ Do **not** update it after every tiny edit. That burns tokens. Milestones only.
    - Add a session-log entry at the **top** (template in `PROGRESS.md`).
    - Keep only the last 10 session-log entries. Delete older ones (git keeps them).
 4. Commit: `docs(progress): handoff  [tool: <name>]`
+5. `git push`, so the next tool (possibly on another machine) gets your work.
 
 ---
 
@@ -89,8 +102,14 @@ Do **not** update it after every tiny edit. That burns tokens. Milestones only.
   it, or it's clearly broken. If you disagree with an approach, log it in "Decisions" as a proposal.
   Don't silently change it.
 - **Follow existing conventions** in the code, even if you would choose differently.
+- **One tool at a time.** Never run two AI tools on this repo at once. If parallel work is ever
+  needed, each tool works on its own branch.
 - **No hidden state.** No notes only "in your head", and no local files outside the repo.
 - **Never commit secrets.** Real keys go in `.env` (gitignored). Add the variable name to `.env.example`.
+- **Never commit real business or client data** (names, phones, emails of real prospects). It is
+  GDPR personal data and the repo may be public. Fixtures, seeds and the golden set use invented businesses.
+- **Prompts are code.** They live in `src/prompts/`. When you change one, bump its `version:` line and
+  rerun the golden set (PRODUCT §11).
 - **Ask the human** only for decisions that are genuinely theirs: money, legal, brand, sending messages to
   real businesses, deploying to production. Otherwise pick a sensible default and log it.
 - **Never send outreach messages or emails to real businesses automatically.** The product writes them,
@@ -109,7 +128,22 @@ Do **not** update it after every tiny edit. That burns tokens. Milestones only.
   with typed inputs and outputs.
 - Put all user-facing text through an i18n layer from day one. Languages: `sl`, `hr`, `sr-Latn`,
   `sr-Cyrl`, `bs`, `mk`, `de`, `en`.
-- Tests: Vitest for logic (filters, classifiers, parsers). Keep them fast.
+- Validation: **Zod** for every external input and every AI JSON output. Phones: **libphonenumber-js**.
+  Screenshots and site checks: **Playwright**.
+- Tests: Vitest for logic (filters, classifiers, parsers). Keep them fast. The AI wrapper has a mock
+  provider (`AI_PROVIDER_MODE=mock`), so tests never cost money.
+- Money: integer cents plus a currency code. Never floats.
+
+Folder layout:
+```
+src/app/              Next.js routes (UI)
+src/lib/<module>/     maps, registry, classify, score, checker, sitegen, outreach, ai, deploy
+src/prompts/          AI prompt files (versioned)
+src/trades/           one JSON config per trade
+templates/            client site templates
+supabase/migrations/  SQL migrations
+tests/  tests/golden/ unit tests and the golden set (invented businesses only)
+```
 
 ---
 
@@ -134,3 +168,24 @@ sites and messages. See `docs/PRODUCT.md` §6.
 - Don't paste big files back in your replies. Reference `path:line`.
 - Don't regenerate a whole file to change a few lines. Edit in place.
 - Keep this file and `PROGRESS.md` under about 250 lines each.
+
+---
+
+## 8. For the human: how to switch tools
+
+Open a terminal in the project folder and start either tool:
+```
+cd ~/Projects/Spletko && claude
+cd ~/Projects/Spletko && gemini
+```
+Claude Code loads `CLAUDE.md` and Gemini CLI loads `GEMINI.md`. Both point here. Other tools (Codex,
+Cursor and similar) read `AGENTS.md` directly.
+
+**First message to any tool:**
+> Read AGENTS.md and PROGRESS.md, then continue with the task in progress or the next one. Follow the session protocol.
+
+**When a tool is close to its limit, or you want to switch:**
+> Handoff now: finish the smallest safe step, commit, update PROGRESS.md per AGENTS.md §3.4, and push.
+
+**Review before a milestone:** ask the *other* tool to review it:
+> Review the commits since <hash> against docs/PRODUCT.md. List problems; don't change code yet.

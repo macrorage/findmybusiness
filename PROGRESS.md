@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing yet. The next tool takes the top item from "Next up"._
+_Nothing yet. The next tool takes the top unblocked item from "Next up"._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -19,30 +19,45 @@ _Nothing yet. The next tool takes the top item from "Next up"._
 
 ---
 
-## ⏭ Next up (ordered: always take the top one)
+## ⏭ Next up (ordered: take the top one that isn't waiting on a 👤 human task)
 
-**Phase 0: foundation**
-1. [x] `git init`, `.gitignore` (node, .env, .next), first commit with these docs, push to `https://github.com/macrorage/findmybusiness`.
-2. [ ] Scaffold a Next.js + TypeScript + Tailwind + pnpm app. Add Vitest. Add `.env.example`.
-3. [ ] Supabase project. Write the schema from `docs/PRODUCT.md` §7 as an SQL migration.
-4. [ ] `src/lib/ai/`: one provider-agnostic wrapper (Claude + Gemini) with a `task → model` routing table.
-5. [ ] i18n setup with `sl` + `en` first.
+**Phase 0: foundation** (PRODUCT §10)
+1. [x] `git init`, `.gitignore`, first commit with these docs, push to `https://github.com/macrorage/findmybusiness`.
+2. [ ] Scaffold Next.js + TypeScript (strict) + Tailwind + pnpm. Add Vitest, ESLint, and `lint` / `typecheck` / `test` scripts. Create `.env.example` from PRODUCT §13. Create the folder layout from AGENTS.md §5.
+3. [ ] DB schema from PRODUCT §7 as an SQL migration in `supabase/migrations/`. Run it locally with the Supabase CLI. (Hosted project: waits on 👤 H1.)
+4. [ ] `src/lib/ai/`: provider-agnostic wrapper (Claude + Gemini), a `task → model` routing table in config, **mock provider first** (`AI_PROVIDER_MODE=mock`), Zod-validated JSON output, cost logging to `ai_calls`. (Live calls: wait on 👤 H1.)
+5. [ ] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format + the first trade `src/trades/frizer.json` (PRODUCT §5.5).
+6. [ ] i18n setup with `sl` + `en` first.
+7. [ ] `tests/golden/`: 10 **invented** businesses as JSON fixtures (mixed trades; SL + HR).
 
-**Phase 1: prospect finder (first useful thing)**
-6. [ ] `src/lib/maps/`: DataForSEO Google Maps search (trade + city → listings). Cache results in the DB.
-7. [ ] `src/lib/registry/`: research AJPES/ePRS and bizi.si access (API? export? terms?). Write the findings to `docs/decisions/`. **Research only; no scraping until the terms are checked.**
-8. [ ] Rule-based classifier: `no_website` / `social_only` / `has_site` / `chain`. Unit tests.
-9. [ ] Website checker: does it load? HTTPS? mobile viewport? last-modified? Screenshot → Gemini Flash: "outdated?" score.
-10. [ ] UI: "Find prospects" page (trade dropdown in Slovenian + city) → results table with reason badges.
+**Phase 1: prospect finder** (needs 👤 H1 for DataForSEO)
+8. [ ] `src/lib/maps/`: DataForSEO Google Maps search (trade + city → listings), cost estimate before the run, cache in the DB, dedupe (PRODUCT §5.1).
+9. [ ] `src/lib/classify/`: rule-based labels + phone type / contact channels via libphonenumber-js. Unit tests (PRODUCT §5.2).
+10. [ ] `src/lib/score/`: lead score with a breakdown. Unit tests (PRODUCT §5.3).
+11. [ ] `src/lib/checker/`: website checks + Playwright screenshot → Gemini Flash outdated score (PRODUCT §5.4).
+12. [ ] UI: "Find prospects" page (trade dropdown in Slovenian + city) → ranked table with label badges, reasons, channels and cost.
+13. [ ] `src/lib/registry/`: **research only**: AJPES/ePRS and bizi.si access and terms → `docs/decisions/0001-registry-access.md`. No scraping.
 
-**Phase 2+:** see `docs/PRODUCT.md` §10 (roadmap).
+**Phase 2+:** see PRODUCT §10 (roadmap).
 
 ---
 
-## ⛔ Blockers / needs a human decision
-- [x] Product name: **Spletko** (chosen 2026-11-26). Domain still open.
-- [ ] Which Maps data source: DataForSEO (pay per use) or Google Places API (free tier, stricter terms)? Default: DataForSEO.
-- [ ] Legal check of cold outreach to `d.o.o.` vs `s.p.` in SI/HR before the first real outreach. See PRODUCT §8.
+## 👤 Human tasks (only the human can do these; can run in parallel with coding)
+- [ ] **H1 Accounts and API keys.** Put them in a local `.env`, never in git.
+  - Anthropic API key at console.anthropic.com (pay per use; **separate from the Claude subscription**).
+  - Gemini API key at Google AI Studio.
+  - Supabase project, DataForSEO account, Cloudflare account.
+- [ ] **H2 Validation sprint** (PRODUCT §10, Phase 0.5): 2 trades × 2 cities, 25 leads by hand, 5 sites with Claude chat, 25 personal messages, follow-up calls. Write the results here.
+- [ ] **H3 Legal and admin:** a lawyer or accountant checks outreach rules (SI/HR), a client contract + DPA template, invoicing setup (`s.p.` or `d.o.o.`). PRODUCT §8.
+- [ ] **H4 Domains:** a product domain + a **separate** preview domain.
+- [ ] **H5 Repo visibility:** the GitHub repo is **public**. Decide whether to make it private.
+- [ ] **H6 Native-speaker reviewer** for Slovenian (and later Croatian) sites and messages.
+
+---
+
+## ⛔ Blockers / open decisions
+- [x] Product name: **Spletko** (chosen 2026-11-26).
+- [ ] Maps data source: DataForSEO (pay per use) or Google Places API? **Default: DataForSEO.**
 
 ---
 
@@ -54,6 +69,11 @@ _Nothing yet. The next tool takes the top item from "Next up"._
 | 2026-11-26 | Phase 1 = in-house agency use; Phase 2 = SaaS | Validate sales before building SaaS features | human + claude |
 | 2026-11-26 | Stack (provisional): Next.js, TS, Tailwind, Supabase, Cloudflare Pages | Free tiers, AI tools know them well | claude |
 | 2026-11-26 | AI routing: Gemini Flash = classify/vision; Claude = site and copy generation | Cost vs. quality | claude |
+| 2026-11-26 | One tool at a time; `git pull` at the start and `git push` at the end of every session | Avoid tools overwriting each other | claude |
+| 2026-11-26 | Sites are generated as **content JSON + templates**, not free-form HTML | Consistent quality, cheap edits, testable | claude |
+| 2026-11-26 | AI wrapper gets a mock provider first | Build and test without keys or cost | claude |
+| 2026-11-26 | No real prospect data in git; golden set = invented businesses | GDPR; the repo may be public | claude |
+| 2026-11-26 | Every site and message is reviewed by a human before contact (`reviewed` status) | Language quality and trust | claude |
 
 ---
 
@@ -67,8 +87,10 @@ _Nothing yet. The next tool takes the top item from "Next up"._
 - Next tool should: ...
 -->
 
+### 2026-11-26 · claude · Plan review before implementation
+- Did: expanded PRODUCT.md (validation phase, KPIs, lead scoring, trade configs, content schema, OG link previews, preview tracking, after-sale, ops and budget cap, QA and golden set, risks, env vars; corrected the accessibility-law note). Added docs/SALES.md. AGENTS.md: git pull/push, one tool at a time, definition of done, folder layout, human switching guide. PROGRESS.md: human tasks H1–H6, new Phase 0 items.
+- Branch: `docs/plan-review`.
+- Next tool should: start at Next up #2.
+
 ### 2026-11-26 · claude · Project docs created
-- Did: wrote `AGENTS.md`, `PROGRESS.md`, `docs/PRODUCT.md`, `CLAUDE.md`, `GEMINI.md`.
-- Also: git repo set up, `.gitignore` added, pushed to GitHub (`main`).
-- Left unfinished: Next up #2 onward.
-- Next tool should: start at Next up #2 (scaffold the app).
+- Did: wrote `AGENTS.md`, `PROGRESS.md`, `docs/PRODUCT.md`, `CLAUDE.md`, `GEMINI.md`. Git repo set up, `.gitignore` added, pushed to GitHub (`main`, a153871).
