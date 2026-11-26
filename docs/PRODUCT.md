@@ -235,25 +235,35 @@ All calls go through `src/lib/ai/`, which has a routing table like:
 
 ---
 
-## 7. Data model (first draft; Postgres / Supabase)
+## 7. Data model (Postgres / Supabase)
+
+**Source of truth: `supabase/migrations/`** (first one: `20261126120000_initial_schema.sql`).
+Tested by `tests/db/schema.test.ts`, which applies every migration to an in-memory Postgres (PGlite).
+This section is only an overview; if it disagrees with the migrations, the migrations win.
 
 ```
-businesses      id, country, name, legal_form, reg_number, vat_id, trade, address, city, lat, lng,
-                phone_e164, phone_type, email, website_url, maps_place_id (unique), rating, review_count,
-                source_flags, registry_match_confidence, created_at, updated_at
-searches        id, trade, city, country, radius_km, source, est_cost_cents, cost_cents, result_count, created_at
-search_results  search_id, business_id
-classifications business_id, label, reasons jsonb, outdated_score, lead_score, score_breakdown jsonb, checked_at
-sites           id, business_id, template, language, content jsonb, content_version, preview_slug (unique),
-                og_image_url, status, expires_at, deployed_url, custom_domain, created_at
-preview_views   site_id, viewed_at, device_type          -- no IP, no cookies
-messages        id, business_id, channel, language, body, prompt_version, sent_by_human_at, kind (first|followup|reply)
-pipeline        business_id, status, next_action_at, deal_value_cents, currency, notes, updated_at
-clients         business_id, plan, setup_price_cents, monthly_price_cents, currency, start_date,
-                domain, contract_signed_at, status
-ai_calls        id, task, provider, model, prompt_version, input_tokens, output_tokens, cost_cents, created_at
-do_not_contact  business_id | phone_e164 | email, reason, created_at
+businesses      one row per real business; dedupe keys: maps_place_id (unique), (country, reg_number) (unique)
+searches        trade + city + country + source; estimated and actual cost (micro-USD)
+search_results  which businesses a search returned, with rank
+api_cache       raw provider responses with expires_at (never pay twice for the same query)
+classifications one current row per business: label, reasons, contact_channels, outdated_score,
+                lead_score, score_breakdown
+sites           generated site: template, language, content jsonb, content_version (+1 per edit),
+                preview_slug (unique, URL-safe), og_image_url, status, expires_at, deployed_url, custom_domain
+preview_views   site_id, viewed_at, device_type          -- no IP, no cookies, no user agent
+messages        business, site, channel, kind, language, body, prompt_version, sent_by_human_at
+pipeline        one row per business: status, next_action_at, deal value (cents + currency), notes
+clients         paying clients: plan, prices (cents + currency), domain, contract and DPA dates, status;
+                a business with a client row cannot be deleted
+ai_calls        task, provider, model, prompt_version, tokens, cost (micro-USD), latency, ok/error
+do_not_contact  maps_place_id / phone_e164 / email (at least one), reason; survives business deletion;
+                check with is_do_not_contact(place_id, phone, email)
 ```
+
+**Conventions:** status columns are text + CHECK (not enums). Customer money = integer cents + currency.
+Provider costs = integer **micro-USD** (AI calls cost fractions of a cent), converted to EUR only for display
+and the budget cap. RLS is on for every table with no policies in Phase 1; only server code with the
+service-role key reads and writes.
 
 ---
 

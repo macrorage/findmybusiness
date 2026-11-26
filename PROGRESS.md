@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#3, DB schema)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#4, AI wrapper with a mock provider)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -24,7 +24,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#3, DB sche
 **Phase 0: foundation** (PRODUCT §10)
 1. [x] `git init`, `.gitignore`, first commit with these docs, push to `https://github.com/macrorage/findmybusiness`.
 2. [x] Scaffold Next.js + TypeScript (strict) + Tailwind + pnpm. Add Vitest, ESLint, and `lint` / `typecheck` / `test` scripts. Create `.env.example` from PRODUCT §13. Create the folder layout from AGENTS.md §5.
-3. [ ] DB schema from PRODUCT §7 as an SQL migration in `supabase/migrations/`. Run it locally with the Supabase CLI. (Hosted project: waits on 👤 H1.)
+3. [x] DB schema from PRODUCT §7 as an SQL migration in `supabase/migrations/`, tested with PGlite (`tests/db/schema.test.ts`).
+   - [ ] Still open: apply it with `pnpm db:start` (needs **Docker Desktop running**), and to the hosted project (👤 H1: `pnpm exec supabase link` + `pnpm exec supabase db push`).
 4. [ ] `src/lib/ai/`: provider-agnostic wrapper (Claude + Gemini), a `task → model` routing table in config, **mock provider first** (`AI_PROVIDER_MODE=mock`), Zod-validated JSON output, cost logging to `ai_calls`. (Live calls: wait on 👤 H1.)
 5. [ ] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format + the first trade `src/trades/frizer.json` (PRODUCT §5.5).
 6. [ ] i18n setup with `sl` + `en` first.
@@ -79,6 +80,12 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#3, DB sche
 | 2026-11-26 | `typecheck` = `next typegen && tsc --noEmit` | `LayoutProps`/route types are generated; works on a fresh clone without a build | claude |
 | 2026-11-26 | Next.js agent-rules block kept at the end of AGENTS.md | `next dev` re-adds it otherwise, leaving a dirty tree | claude |
 | 2026-11-26 | Fonts load `latin-ext` + `cyrillic` subsets; `<html lang="sl">` until i18n | č ć š ž đ and sr-Cyrl/mk must render | claude |
+| 2026-11-26 | Migrations are the schema's source of truth; tested on PGlite in Vitest | Works for every tool without Docker or keys | claude |
+| 2026-11-26 | Status columns = text + CHECK, not enums | Easier to extend in later migrations | claude |
+| 2026-11-26 | Provider costs (AI, DataForSEO) stored as integer micro-USD; customer money as cents + currency | AI calls cost fractions of a cent; providers bill in USD | claude |
+| 2026-11-26 | Phase 1 security: RLS on everywhere, **no policies**; all DB access server-side with the service-role key after the admin email check | Simplest safe setup for one user; Phase 2 adds tenant policies | claude |
+| 2026-11-26 | Added `api_cache` table and `is_do_not_contact()` function (not in the first PRODUCT draft) | Needed for §5.1 caching and §5.7 opt-outs | claude |
+| 2026-11-26 | Supabase CLI and PGlite installed as dev dependencies (`pnpm exec supabase …`) | Same CLI version for every tool, no global install | claude |
 
 ---
 
@@ -91,6 +98,12 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#3, DB sche
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · DB schema (Next up #3)
+- Did: `supabase init` (config in `supabase/config.jsonc`, Postgres 17), migration `20261126120000_initial_schema.sql` with 12 tables, dedupe keys, CHECK constraints, `updated_at` triggers, `is_do_not_contact()`, RLS on all tables. `tests/db/schema.test.ts` (13 tests on PGlite). Scripts `db:start` / `db:stop` / `db:reset` / `db:new`. PRODUCT §7 now points to the migrations.
+- Verified: `pnpm check` passes (16 tests).
+- Not done: `supabase start` was not run, because Docker isn't running on this machine. The hosted project waits on H1.
+- Next tool should: start #4 (AI wrapper, mock provider first).
 
 ### 2026-11-26 · claude · App scaffold (Next up #2)
 - Did: Next.js 16.4 app (TS strict, Tailwind 4, App Router, `src/`), Vitest 5 + `tests/money.test.ts`, scripts `lint` / `typecheck` / `test` / `check`, `.env.example`, README, folder layout with `.gitkeep`s, `src/lib/money.ts` (integer cents + currency), Slovenian placeholder home page.
