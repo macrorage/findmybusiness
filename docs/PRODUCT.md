@@ -220,11 +220,16 @@ All calls go through `src/lib/ai/`, which has a routing table like:
 
 | Task | Model (default) | Fallback | Notes |
 |---|---|---|---|
-| Classify unclear listings | Gemini Flash | Claude Haiku | Cheap, high volume |
-| Screenshot "outdated?" score | Gemini Flash (vision) | Claude Sonnet | Image input |
-| Site content (JSON) | Claude Sonnet | Gemini Pro | Quality matters; SL/HR language |
-| Outreach messages | Claude Sonnet | Gemini Pro | Tone matters |
-| Plain-language site edits | Claude Sonnet | Gemini Pro | Structured JSON output |
+| `classify` (unclear listings) | `gemini-3.5-flash-lite` | `claude-opus-5-5` (effort low) | Cheap, high volume |
+| `outdated_vision` (screenshot score) | `gemini-3.5-flash-lite` | `claude-opus-5-5` (effort low) | Image input |
+| `site_content` (JSON) | `claude-opus-5-5` (effort medium) | `gemini-3.8-flash` | Quality matters; SL/HR language |
+| `outreach` | `claude-opus-5-5` (effort medium) | `gemini-3.8-flash` | Tone matters |
+| `site_edit` | `claude-opus-5-5` (effort low) | `gemini-3.8-flash` | Structured JSON output |
+
+Source of truth: `src/lib/ai/routing.ts` (routes) and `src/lib/ai/models.ts` (prices, checked 2026-11-26).
+Cheaper Claude models (`claude-sonnet-5-5` at $2/$10, `claude-haiku-5-5` at $0.10/$0.50 per 1M tokens) are
+priced in `models.ts`; switching to them is the owner's decision. Every Claude request also sends Anthropic's
+server-side refusal fallback (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`).
 
 - **API keys are separate from chat subscriptions.** A Claude Pro/Max or Gemini app subscription does *not* pay for API calls. The product needs an Anthropic API key (console.anthropic.com) and a Gemini API key (Google AI Studio), both pay-per-use.
 - Model IDs live in config, not in code. Look up current IDs in the provider docs when implementing.

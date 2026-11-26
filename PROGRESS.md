@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#4, AI wrapper with a mock provider)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#5, site content schema + trade configs)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -26,7 +26,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#4, AI wrap
 2. [x] Scaffold Next.js + TypeScript (strict) + Tailwind + pnpm. Add Vitest, ESLint, and `lint` / `typecheck` / `test` scripts. Create `.env.example` from PRODUCT §13. Create the folder layout from AGENTS.md §5.
 3. [x] DB schema from PRODUCT §7 as an SQL migration in `supabase/migrations/`, tested with PGlite (`tests/db/schema.test.ts`).
    - [ ] Still open: apply it with `pnpm db:start` (needs **Docker Desktop running**), and to the hosted project (👤 H1: `pnpm exec supabase link` + `pnpm exec supabase db push`).
-4. [ ] `src/lib/ai/`: provider-agnostic wrapper (Claude + Gemini), a `task → model` routing table in config, **mock provider first** (`AI_PROVIDER_MODE=mock`), Zod-validated JSON output, cost logging to `ai_calls`. (Live calls: wait on 👤 H1.)
+4. [x] `src/lib/ai/`: provider-agnostic wrapper (Claude + Gemini), a `task → model` routing table in config, **mock provider first** (`AI_PROVIDER_MODE=mock`), Zod-validated JSON output, cost logging hook (`configureAi({ log })`).
+   - [ ] Still open: a DB logger writing `ai_calls` + the monthly budget check in `beforeCall` (needs Supabase); a live smoke test with real keys (👤 H1).
 5. [ ] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format + the first trade `src/trades/frizer.json` (PRODUCT §5.5).
 6. [ ] i18n setup with `sl` + `en` first.
 7. [ ] `tests/golden/`: 10 **invented** businesses as JSON fixtures (mixed trades; SL + HR).
@@ -59,6 +60,7 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#4, AI wrap
 ## ⛔ Blockers / open decisions
 - [x] Product name: **Spletko** (chosen 2026-11-26).
 - [ ] Maps data source: DataForSEO (pay per use) or Google Places API? **Default: DataForSEO.**
+- [ ] Claude model for sites and messages: **default `claude-opus-5-5`** (about $0.07 per generated site). Cheaper `claude-sonnet-5-5` / `claude-haiku-5-5` are priced in `src/lib/ai/models.ts`; switching is the owner's call (one line in `src/lib/ai/routing.ts`).
 
 ---
 
@@ -86,6 +88,10 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#4, AI wrap
 | 2026-11-26 | Phase 1 security: RLS on everywhere, **no policies**; all DB access server-side with the service-role key after the admin email check | Simplest safe setup for one user; Phase 2 adds tenant policies | claude |
 | 2026-11-26 | Added `api_cache` table and `is_do_not_contact()` function (not in the first PRODUCT draft) | Needed for §5.1 caching and §5.7 opt-outs | claude |
 | 2026-11-26 | Supabase CLI and PGlite installed as dev dependencies (`pnpm exec supabase …`) | Same CLI version for every tool, no global install | claude |
+| 2026-11-26 | AI SDKs: `@anthropic-ai/sdk` (beta `messages.parse` + `betaZodOutputFormat`), `@google/genai` (`responseJsonSchema` from `z.toJSONSchema`), Zod 4 | Official SDKs; structured output validated by Zod | claude |
+| 2026-11-26 | Claude calls send `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`); no `thinking`/`temperature` params (Opus 5.5 rejects them); depth set with `output_config.effort` | Current Claude API rules; refusals auto-rerouted | claude |
+| 2026-11-26 | Gemini models: `gemini-3.5-flash-lite` (classify/vision), `gemini-3.8-flash` (fallback for Claude tasks) | Checked on Google's model and pricing pages 2026-11-26; `gemini-2.5-*` is being retired | claude |
+| 2026-11-26 | Callers use `generateText` / `generateObject(req, zodSchema)`; mock responders via `setMockResponder(task, fn)` | Typed results; mock mode fails loudly on missing fixtures | claude |
 
 ---
 
@@ -98,6 +104,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#4, AI wrap
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · AI wrapper (Next up #4)
+- Did: `src/lib/ai/` (types, models + prices, routing, errors, prompt loader, providers: anthropic / google / mock, `generateText` / `generateObject` with retry-once-on-invalid-JSON and fallback route). `src/lib/env.ts` (Zod-validated env). 21 new tests (mocked SDKs check the exact request shape). PRODUCT §6 table updated.
+- Verified: `pnpm check` passes (37 tests). No live API call was made (no keys yet: H1).
+- Next tool should: start #5.
 
 ### 2026-11-26 · claude · DB schema (Next up #3)
 - Did: `supabase init` (config in `supabase/config.jsonc`, Postgres 17), migration `20261126120000_initial_schema.sql` with 12 tables, dedupe keys, CHECK constraints, `updated_at` triggers, `is_do_not_contact()`, RLS on all tables. `tests/db/schema.test.ts` (13 tests on PGlite). Scripts `db:start` / `db:stop` / `db:reset` / `db:new`. PRODUCT §7 now points to the migrations.
