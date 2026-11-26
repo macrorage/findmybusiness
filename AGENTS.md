@@ -120,7 +120,10 @@ Do **not** update it after every tiny edit. That burns tokens. Milestones only.
 ## 5. Tech conventions (provisional; finalised in Phase 0, see PROGRESS "Decisions")
 
 - Language: **TypeScript** (strict). Package manager: **pnpm**.
-- App: **Next.js (App Router)** with Tailwind. DB, auth and storage: **Supabase (Postgres)**.
+- App: **Next.js 16.4 (App Router, `cacheComponents` on)** with Tailwind 4. It's newer than most AI
+  training data: read the matching guide in `node_modules/next/dist/docs/` before using a Next API
+  (see the block at the end of this file). DB, auth and storage: **Supabase (Postgres)**.
+- Node 22.12+ / 24 / 26 (Vitest 5 needs it). Run `pnpm check` (lint + typecheck + tests) before every commit.
 - Generated client sites: static HTML + Tailwind, deployed to **Cloudflare Pages**.
 - AI calls go **only** through one wrapper module (`src/lib/ai/`). It hides which provider is used, so
   models can be swapped in one place.
@@ -189,3 +192,15 @@ Cursor and similar) read `AGENTS.md` directly.
 
 **Review before a milestone:** ask the *other* tool to review it:
 > Review the commits since <hash> against docs/PRODUCT.md. List problems; don't change code yet.
+
+---
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

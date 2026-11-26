@@ -1,17 +1,22 @@
 # dependencies
 node_modules/
 .pnpm-store/
+.pnp
+.pnp.*
 
 # builds
 .next/
 out/
 dist/
 build/
+*.tsbuildinfo
+next-env.d.ts
 
 # env and secrets
 .env
 .env.*
 !.env.example
+*.pem
 
 # logs and OS
 *.log
@@ -21,4 +26,5 @@ build/
 .vercel/
 .wrangler/
 coverage/
+.supabase/
 .claude/settings.local.json

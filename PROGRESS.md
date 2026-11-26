@@ -3,12 +3,12 @@
 > Read `AGENTS.md` first. Update this file at milestones and **always before you stop** (AGENTS.md §3.4).
 > If this file and `git log` disagree, git wins: fix this file first.
 
-**Last updated:** 2026-11-26 by claude · **Phase:** 0 (setup) · **Build status:** no code yet
+**Last updated:** 2026-11-26 by claude · **Phase:** 0 (setup) · **Build status:** ✅ `pnpm check` and `pnpm build` pass
 
 ---
 
 ## ▶ In progress
-_Nothing yet. The next tool takes the top unblocked item from "Next up"._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#3, DB schema)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -23,7 +23,7 @@ _Nothing yet. The next tool takes the top unblocked item from "Next up"._
 
 **Phase 0: foundation** (PRODUCT §10)
 1. [x] `git init`, `.gitignore`, first commit with these docs, push to `https://github.com/macrorage/findmybusiness`.
-2. [ ] Scaffold Next.js + TypeScript (strict) + Tailwind + pnpm. Add Vitest, ESLint, and `lint` / `typecheck` / `test` scripts. Create `.env.example` from PRODUCT §13. Create the folder layout from AGENTS.md §5.
+2. [x] Scaffold Next.js + TypeScript (strict) + Tailwind + pnpm. Add Vitest, ESLint, and `lint` / `typecheck` / `test` scripts. Create `.env.example` from PRODUCT §13. Create the folder layout from AGENTS.md §5.
 3. [ ] DB schema from PRODUCT §7 as an SQL migration in `supabase/migrations/`. Run it locally with the Supabase CLI. (Hosted project: waits on 👤 H1.)
 4. [ ] `src/lib/ai/`: provider-agnostic wrapper (Claude + Gemini), a `task → model` routing table in config, **mock provider first** (`AI_PROVIDER_MODE=mock`), Zod-validated JSON output, cost logging to `ai_calls`. (Live calls: wait on 👤 H1.)
 5. [ ] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format + the first trade `src/trades/frizer.json` (PRODUCT §5.5).
@@ -74,6 +74,11 @@ _Nothing yet. The next tool takes the top unblocked item from "Next up"._
 | 2026-11-26 | AI wrapper gets a mock provider first | Build and test without keys or cost | claude |
 | 2026-11-26 | No real prospect data in git; golden set = invented businesses | GDPR; the repo may be public | claude |
 | 2026-11-26 | Every site and message is reviewed by a human before contact (`reviewed` status) | Language quality and trust | claude |
+| 2026-11-26 | Next.js 16.4 + React 19.3 + Tailwind 4.3 (create-next-app defaults, incl. `cacheComponents`), ESLint 9 flat config, Vitest 5 | Current stable versions; scaffold defaults keep it standard | claude |
+| 2026-11-26 | Node `^22.12 \|\| ^24 \|\| >=26` (`engines`) | Vitest 5 requirement | claude |
+| 2026-11-26 | `typecheck` = `next typegen && tsc --noEmit` | `LayoutProps`/route types are generated; works on a fresh clone without a build | claude |
+| 2026-11-26 | Next.js agent-rules block kept at the end of AGENTS.md | `next dev` re-adds it otherwise, leaving a dirty tree | claude |
+| 2026-11-26 | Fonts load `latin-ext` + `cyrillic` subsets; `<html lang="sl">` until i18n | č ć š ž đ and sr-Cyrl/mk must render | claude |
 
 ---
 
@@ -86,6 +91,12 @@ _Nothing yet. The next tool takes the top unblocked item from "Next up"._
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · App scaffold (Next up #2)
+- Did: Next.js 16.4 app (TS strict, Tailwind 4, App Router, `src/`), Vitest 5 + `tests/money.test.ts`, scripts `lint` / `typecheck` / `test` / `check`, `.env.example`, README, folder layout with `.gitkeep`s, `src/lib/money.ts` (integer cents + currency), Slovenian placeholder home page.
+- Verified: `pnpm check` passes (3 tests), `pnpm build` passes, `pnpm dev` serves `/` with HTTP 200 and `lang="sl"`.
+- Left unfinished: nothing in #2.
+- Next tool should: start #3 (DB schema migration). Install the Supabase CLI locally (`supabase init` / `supabase start` needs Docker; if Docker is missing, write the migration SQL anyway and note it here).
 
 ### 2026-11-26 · claude · Plan review before implementation
 - Did: expanded PRODUCT.md (validation phase, KPIs, lead scoring, trade configs, content schema, OG link previews, preview tracking, after-sale, ops and budget cap, QA and golden set, risks, env vars; corrected the accessibility-law note). Added docs/SALES.md. AGENTS.md: git pull/push, one tool at a time, definition of done, folder layout, human switching guide. PROGRESS.md: human tasks H1–H6, new Phase 0 items.
