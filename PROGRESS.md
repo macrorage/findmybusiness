@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#13, registry research)._
+_Nothing in progress. Phase 0 and Phase 1 code is done in mock mode. **Everything left is waiting on a human task** (keys, Docker, legal, decisions): see 👤 below. With keys in place, the next tool should: (1) run one live search and one live site check, (2) connect Supabase (DB logger for `ai_calls`, budget check, saving searches), (3) start Phase 2 (site generator, PRODUCT §5.5)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -41,7 +41,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#13, regist
    - [ ] Still open: live AI scoring needs keys (👤 H1). Chromium: `pnpm exec playwright install chromium` once per machine.
 12. [x] UI: `/find` page (`src/app/find/`) → ranked table with label badges, score breakdown (hover), formatted phones, channels, reasons, skipped section, cost. Pipeline in `src/lib/finder/`. Checked in the browser (desktop + phone width, no console errors).
    - [ ] Still open: save results to the DB (needs Supabase), "check website" button for `needs_check` leads, login before any deployment (live searches are blocked in production builds until then).
-13. [ ] `src/lib/registry/`: **research only**: AJPES/ePRS and bizi.si access and terms → `docs/decisions/0001-registry-access.md`. No scraping.
+13. [x] Registry research → `docs/decisions/0001-registry-access.md`: SI PRS open data (CC BY 4.0, CSV/XML, twice monthly) = use; bizi.si terms forbid bulk export = don't use; HR Sudski registar to verify manually; obrt not covered.
+   - [ ] Next: list the PRS CSV columns (needs 👤 OK to download the 122.5 MB file with sole-trader data), then a `registry_entries` migration + import + matching (Phase 5).
 
 **Phase 2+:** see PRODUCT §10 (roadmap).
 
@@ -57,6 +58,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#13, regist
 - [ ] **H4 Domains:** a product domain + a **separate** preview domain.
 - [ ] **H5 Repo visibility:** the GitHub repo is **public**. Decide whether to make it private.
 - [ ] **H6 Native-speaker reviewer** for Slovenian (and later Croatian) sites and messages.
+- [ ] **H7 Docker Desktop:** start it so `pnpm db:start` can run the local Supabase stack (the schema is only tested on PGlite so far).
+- [ ] **H8 OK to download** the PRS open-data CSV (122.5 MB, CC BY 4.0, includes sole traders) to inspect its columns. Not committed to git.
 
 ---
 
@@ -107,6 +110,7 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#13, regist
 | 2026-11-26 | Real-browser tests are opt-in (`RUN_BROWSER_TESTS=1`) | Default suite stays offline and fast | claude |
 | 2026-11-26 | `/find` is a server-rendered GET form (no client JS); the results part reads `searchParams` inside `<Suspense>` | Required by Next 16 Cache Components; shareable URLs | claude |
 | 2026-11-26 | Production builds refuse live searches until login exists (override: `SPLETKO_ALLOW_UNAUTHENTICATED_LIVE=1`) | A deployed page must not be able to run up API costs | claude |
+| 2026-11-26 | Registries: SI PRS open data yes; bizi.si no (terms); no scraping anywhere | See docs/decisions/0001-registry-access.md | claude |
 | 2026-11-26 | No dentist/health trade yet | Healthcare advertising has extra rules; add after the legal check (H3) | claude |
 
 ---
@@ -120,6 +124,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#13, regist
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · Registry research (Next up #13)
+- Did: researched OPSI/AJPES PRS (dataset page + field catalogue), bizi.si terms, data.gov.hr. Wrote `docs/decisions/0001-registry-access.md`.
+- Not done: Croatian developer portal (redirect loop for automated fetches), Serbia/BiH/MK.
+- Next tool should: see "In progress" (everything left waits on 👤 tasks).
 
 ### 2026-11-26 · claude · Find prospects page (Next up #12)
 - Did: `src/lib/finder/` (query validation, pipeline, live-mode guard), `src/app/find/page.tsx` + `format.ts`, home page link, reason/signal/finder strings (sl + en), `formatUsdMicros`, `formatPhone`, `.claude/launch.json` (dev server on port 3123). 3 new tests.
