@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#7, golden set)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#8, Maps client)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -30,7 +30,7 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#7, golden 
    - [ ] Still open: a DB logger writing `ai_calls` + the monthly budget check in `beforeCall` (needs Supabase); a live smoke test with real keys (👤 H1).
 5. [x] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format (`src/lib/trades.ts`) + 7 trades in `src/trades/` (frizer, kozmeticni-salon, avtoservis, vodovodar, elektricar, gostilna, apartmaji).
 6. [x] i18n setup with `sl` + `en` (`src/i18n/`; UI language from `APP_LOCALE`, default `sl`).
-7. [ ] `tests/golden/`: 10 **invented** businesses as JSON fixtures (mixed trades; SL + HR).
+7. [x] `tests/golden/`: 10 **invented** businesses (`businesses.json`, 7 SL + 3 HR, every classifier outcome) + loader and validity tests. Shared listing shape: `src/lib/prospect.ts`.
 
 **Phase 1: prospect finder** (needs 👤 H1 for DataForSEO)
 8. [ ] `src/lib/maps/`: DataForSEO Google Maps search (trade + city → listings), cost estimate before the run, cache in the DB, dedupe (PRODUCT §5.1).
@@ -95,6 +95,8 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#7, golden 
 | 2026-11-26 | Site content = `SiteCopySchema` (AI writes) + facts from data (name, phone, address, hours, legal, real reviews) in `SiteContentSchema` | The AI can't invent phones or reviews (PRODUCT §8) | claude |
 | 2026-11-26 | Trades are JSON files registered in `src/trades/index.ts` (static imports) | Works in the Next.js bundle; a test catches unregistered files | claude |
 | 2026-11-26 | UI i18n = typed dictionaries (`sl` is the source; `en: Dictionary` must match), language from `APP_LOCALE`, no locale routing | One Slovenian user in Phase 1; avoids dynamic per-request APIs; per-user locale in Phase 2 | claude |
+| 2026-11-26 | `Prospect` (src/lib/prospect.ts) is the one normalized listing shape every source must produce | Classifier, scorer and sitegen stay source-agnostic | claude |
+| 2026-11-26 | Classifier pre-check label `needs_check` for businesses with their own site; the checker (#11) turns it into `outdated` or `ok` before storing | DB stores only final labels | claude |
 | 2026-11-26 | No dentist/health trade yet | Healthcare advertising has extra rules; add after the legal check (H3) | claude |
 
 ---
@@ -108,6 +110,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#7, golden 
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · Golden set (Next up #7)
+- Did: `src/lib/prospect.ts` (normalized listing), `tests/golden/` (10 invented businesses, README, loader, 4 tests).
+- Verified: `pnpm check` passes (55 tests).
+- Next tool should: start #8.
 
 ### 2026-11-26 · claude · i18n (Next up #6)
 - Did: `src/i18n/` (sl source, en, `getDictionary`, `fmt`, `intlLocale`), UI strings for finder, labels, channels, pipeline, countries. Layout `lang` and home page use it. `APP_LOCALE` in env. 3 new tests (key and placeholder parity).

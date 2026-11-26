@@ -1,0 +1,222 @@
+[
+  {
+    "id": "g01-frizer-maribor",
+    "trade": "frizer",
+    "language": "sl",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g01",
+      "name": "Frizerski salon Lasja",
+      "category": "Hair salon",
+      "country": "SI",
+      "city": "Maribor",
+      "address": "Izmišljena ulica 12, 2000 Maribor",
+      "street": "Izmišljena ulica 12",
+      "postalCode": "2000",
+      "lat": 46.5547,
+      "lng": 15.6459,
+      "phone": "041 000 001",
+      "rating": 4.8,
+      "reviewCount": 52,
+      "hours": [
+        { "day": "tue", "opens": "08:00", "closes": "16:00" },
+        { "day": "wed", "opens": "08:00", "closes": "16:00" },
+        { "day": "thu", "opens": "12:00", "closes": "19:00" },
+        { "day": "fri", "opens": "08:00", "closes": "16:00" },
+        { "day": "sat", "opens": "08:00", "closes": "12:00" }
+      ],
+      "reviews": [
+        { "author": "Maja K.", "rating": 5, "text": "Vedno zadovoljna, prijazno in brez čakanja." },
+        { "author": "Tina P.", "rating": 5, "text": "Najboljše barvanje v Mariboru." }
+      ]
+    },
+    "legal": { "companyName": "Lasja, frizerske storitve, Ana Testna s.p.", "legalForm": "s.p.", "address": "Izmišljena ulica 12, 2000 Maribor" },
+    "expect": { "label": "no_website", "channels": ["viber", "whatsapp", "sms", "call"] }
+  },
+  {
+    "id": "g02-kozmetika-ljubljana-facebook",
+    "trade": "kozmeticni-salon",
+    "language": "sl",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g02",
+      "name": "Kozmetika Zrcalo",
+      "category": "Beauty salon",
+      "country": "SI",
+      "city": "Ljubljana",
+      "address": "Neobstoječa cesta 5, 1000 Ljubljana",
+      "phone": "+386 31 000 002",
+      "website": "https://www.facebook.com/kozmetika.zrcalo.example",
+      "rating": 4.9,
+      "reviewCount": 31,
+      "reviews": [{ "author": "Nina V.", "rating": 5, "text": "Odlična nega obraza, priporočam." }]
+    },
+    "legal": { "companyName": "Zrcalo kozmetika, Eva Primer s.p.", "legalForm": "s.p.", "address": "Neobstoječa cesta 5, 1000 Ljubljana" },
+    "expect": { "label": "social_only", "channels": ["viber", "whatsapp", "sms", "call"] }
+  },
+  {
+    "id": "g03-avtoservis-celje-old-site",
+    "trade": "avtoservis",
+    "language": "sl",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g03",
+      "name": "Avtoservis Zobnik",
+      "category": "Auto repair shop",
+      "country": "SI",
+      "city": "Celje",
+      "address": "Testna pot 3, 3000 Celje",
+      "phone": "03 000 00 03",
+      "website": "http://avtoservis-zobnik.example",
+      "rating": 4.5,
+      "reviewCount": 88,
+      "reviews": [{ "author": "Marko L.", "rating": 4, "text": "Hitro in pošteno, cene korektne." }]
+    },
+    "legal": { "companyName": "Zobnik d.o.o.", "legalForm": "d.o.o.", "address": "Testna pot 3, 3000 Celje" },
+    "expect": { "label": "needs_check", "channels": ["call"] }
+  },
+  {
+    "id": "g04-vodovodar-kranj-landline",
+    "trade": "vodovodar",
+    "language": "sl",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g04",
+      "name": "Vodovodne storitve Kapljica",
+      "category": "Plumber",
+      "country": "SI",
+      "city": "Kranj",
+      "address": "Primerna ulica 8, 4000 Kranj",
+      "phone": "04 000 00 04",
+      "rating": 4.6,
+      "reviewCount": 19,
+      "reviews": [{ "author": "Jure M.", "rating": 5, "text": "Prišel isti dan in hitro popravil." }]
+    },
+    "legal": { "companyName": "Kapljica, Peter Izmišljen s.p.", "legalForm": "s.p.", "address": "Primerna ulica 8, 4000 Kranj" },
+    "expect": { "label": "no_website", "channels": ["call"] }
+  },
+  {
+    "id": "g05-elektricar-koper-linktree",
+    "trade": "elektricar",
+    "language": "sl",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g05",
+      "name": "Elektro Iskra",
+      "category": "Electrician",
+      "country": "SI",
+      "city": "Koper",
+      "address": "Obmorska testna 2, 6000 Koper",
+      "phone": "+38640000005",
+      "website": "https://linktr.ee/elektroiskra.example",
+      "rating": 4.7,
+      "reviewCount": 23,
+      "reviews": []
+    },
+    "legal": { "companyName": "Elektro Iskra, Luka Vzorec s.p.", "legalForm": "s.p.", "address": "Obmorska testna 2, 6000 Koper" },
+    "expect": { "label": "social_only", "channels": ["viber", "whatsapp", "sms", "call"] }
+  },
+  {
+    "id": "g06-gostilna-novo-mesto-closed",
+    "trade": "gostilna",
+    "language": "sl",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g06",
+      "name": "Gostilna Pri Izmišljenem",
+      "category": "Slovenian restaurant",
+      "country": "SI",
+      "city": "Novo mesto",
+      "address": "Vaška testna 1, 8000 Novo mesto",
+      "phone": "07 000 00 06",
+      "rating": 4.2,
+      "reviewCount": 140,
+      "isPermanentlyClosed": true,
+      "reviews": []
+    },
+    "legal": { "companyName": "Gostilna Pri Izmišljenem d.o.o.", "legalForm": "d.o.o.", "address": "Vaška testna 1, 8000 Novo mesto" },
+    "expect": { "label": "closed", "channels": ["call"] }
+  },
+  {
+    "id": "g07-apartmani-porec-booking",
+    "trade": "apartmaji",
+    "language": "hr",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g07",
+      "name": "Apartmani Plavi Val",
+      "category": "Holiday apartment rental",
+      "country": "HR",
+      "city": "Poreč",
+      "address": "Ulica Primjera 7, 52440 Poreč",
+      "phone": "+385 91 000 0007",
+      "website": "https://www.booking.com/hotel/hr/apartmani-plavi-val-example.html",
+      "rating": 4.9,
+      "reviewCount": 64,
+      "reviews": [{ "author": "Ivana B.", "rating": 5, "text": "Prekrasan pogled na more, domaćini vrlo ljubazni." }]
+    },
+    "legal": { "companyName": "Plavi Val, obrt za iznajmljivanje, vl. Marija Primjer", "legalForm": "obrt", "address": "Ulica Primjera 7, 52440 Poreč" },
+    "expect": { "label": "social_only", "channels": ["viber", "whatsapp", "sms", "call"] }
+  },
+  {
+    "id": "g08-frizer-split",
+    "trade": "frizer",
+    "language": "hr",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g08",
+      "name": "Frizerski salon Škare",
+      "category": "Hair salon",
+      "country": "HR",
+      "city": "Split",
+      "address": "Izmišljena 4, 21000 Split",
+      "phone": "098 000 008",
+      "rating": 4.7,
+      "reviewCount": 41,
+      "reviews": [{ "author": "Ana M.", "rating": 5, "text": "Uvijek zadovoljna frizurom." }]
+    },
+    "legal": { "companyName": "Škare, frizerski obrt, vl. Petra Testić", "legalForm": "obrt", "address": "Izmišljena 4, 21000 Split" },
+    "expect": { "label": "no_website", "channels": ["viber", "whatsapp", "sms", "call"] }
+  },
+  {
+    "id": "g09-avtoservis-chain",
+    "trade": "avtoservis",
+    "language": "sl",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g09",
+      "name": "MegaAvto Center Ljubljana",
+      "category": "Auto repair shop",
+      "country": "SI",
+      "city": "Ljubljana",
+      "address": "Industrijska testna 99, 1000 Ljubljana",
+      "phone": "01 000 00 09",
+      "rating": 4.1,
+      "reviewCount": 1250,
+      "reviews": []
+    },
+    "legal": { "companyName": "MegaAvto d.d.", "legalForm": "d.d.", "address": "Industrijska testna 99, 1000 Ljubljana" },
+    "expect": { "label": "chain", "channels": ["call"] }
+  },
+  {
+    "id": "g10-kozmetika-zagreb-own-site",
+    "trade": "kozmeticni-salon",
+    "language": "hr",
+    "prospect": {
+      "source": "fixture",
+      "mapsPlaceId": "fixture-g10",
+      "name": "Beauty studio Lotos",
+      "category": "Beauty salon",
+      "country": "HR",
+      "city": "Zagreb",
+      "address": "Testna avenija 10, 10000 Zagreb",
+      "phone": "+385 1 000 0010",
+      "website": "https://lotos-beauty.example",
+      "rating": 4.8,
+      "reviewCount": 77,
+      "reviews": [{ "author": "Lucija K.", "rating": 5, "text": "Profesionalno i opuštajuće." }]
+    },
+    "legal": { "companyName": "Lotos d.o.o.", "legalForm": "d.o.o.", "address": "Testna avenija 10, 10000 Zagreb" },
+    "expect": { "label": "needs_check", "channels": ["call"] }
+  }
+]
