@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#5, site content schema + trade configs)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#6, i18n)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -28,7 +28,7 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#5, site co
    - [ ] Still open: apply it with `pnpm db:start` (needs **Docker Desktop running**), and to the hosted project (👤 H1: `pnpm exec supabase link` + `pnpm exec supabase db push`).
 4. [x] `src/lib/ai/`: provider-agnostic wrapper (Claude + Gemini), a `task → model` routing table in config, **mock provider first** (`AI_PROVIDER_MODE=mock`), Zod-validated JSON output, cost logging hook (`configureAi({ log })`).
    - [ ] Still open: a DB logger writing `ai_calls` + the monthly budget check in `beforeCall` (needs Supabase); a live smoke test with real keys (👤 H1).
-5. [ ] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format + the first trade `src/trades/frizer.json` (PRODUCT §5.5).
+5. [x] Site content schema (Zod) in `src/lib/sitegen/schema.ts` + trade config format (`src/lib/trades.ts`) + 7 trades in `src/trades/` (frizer, kozmeticni-salon, avtoservis, vodovodar, elektricar, gostilna, apartmaji).
 6. [ ] i18n setup with `sl` + `en` first.
 7. [ ] `tests/golden/`: 10 **invented** businesses as JSON fixtures (mixed trades; SL + HR).
 
@@ -92,6 +92,9 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#5, site co
 | 2026-11-26 | Claude calls send `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`); no `thinking`/`temperature` params (Opus 5.5 rejects them); depth set with `output_config.effort` | Current Claude API rules; refusals auto-rerouted | claude |
 | 2026-11-26 | Gemini models: `gemini-3.5-flash-lite` (classify/vision), `gemini-3.8-flash` (fallback for Claude tasks) | Checked on Google's model and pricing pages 2026-11-26; `gemini-2.5-*` is being retired | claude |
 | 2026-11-26 | Callers use `generateText` / `generateObject(req, zodSchema)`; mock responders via `setMockResponder(task, fn)` | Typed results; mock mode fails loudly on missing fixtures | claude |
+| 2026-11-26 | Site content = `SiteCopySchema` (AI writes) + facts from data (name, phone, address, hours, legal, real reviews) in `SiteContentSchema` | The AI can't invent phones or reviews (PRODUCT §8) | claude |
+| 2026-11-26 | Trades are JSON files registered in `src/trades/index.ts` (static imports) | Works in the Next.js bundle; a test catches unregistered files | claude |
+| 2026-11-26 | No dentist/health trade yet | Healthcare advertising has extra rules; add after the legal check (H3) | claude |
 
 ---
 
@@ -104,6 +107,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#5, site co
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · Site content schema + trades (Next up #5)
+- Did: `src/lib/sitegen/schema.ts` (languages, AI copy schema, facts, legal, reviews, gallery, full site content), `src/lib/trades.ts` + 7 trade JSONs with sl/hr/en labels, keywords, Maps categories, services. 11 new tests (incl. Claude and Gemini schema conversion).
+- Verified: `pnpm check` passes (48 tests).
+- Next tool should: start #6.
 
 ### 2026-11-26 · claude · AI wrapper (Next up #4)
 - Did: `src/lib/ai/` (types, models + prices, routing, errors, prompt loader, providers: anthropic / google / mock, `generateText` / `generateObject` with retry-once-on-invalid-JSON and fallback route). `src/lib/env.ts` (Zod-validated env). 21 new tests (mocked SDKs check the exact request shape). PRODUCT §6 table updated.

@@ -1,0 +1,16 @@
+{
+  "id": "gostilna",
+  "labels": { "sl": "Gostilna / restavracija", "hr": "Restoran / konoba", "en": "Restaurant" },
+  "searchKeywords": { "sl": ["gostilna", "restavracija"], "hr": ["restoran", "konoba"], "en": ["restaurant"] },
+  "mapsCategories": ["Restaurant", "Slovenian restaurant", "Croatian restaurant", "Pizza restaurant", "Family restaurant"],
+  "schemaOrgType": "Restaurant",
+  "templateGroup": "food",
+  "defaultServices": {
+    "sl": ["Malice", "Domača kuhinja", "Praznovanja", "Catering"],
+    "hr": ["Marende", "Domaća kuhinja", "Proslave", "Catering"],
+    "en": ["Lunch menu", "Home-style cooking", "Celebrations", "Catering"]
+  },
+  "primaryCta": "call",
+  "imageQueries": ["rustic restaurant interior", "traditional food plate"],
+  "valueTier": "medium"
+}

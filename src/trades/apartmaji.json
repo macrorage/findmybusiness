@@ -1,0 +1,16 @@
+{
+  "id": "apartmaji",
+  "labels": { "sl": "Apartmaji / turistične sobe", "hr": "Apartmani / sobe", "en": "Holiday apartments" },
+  "searchKeywords": { "sl": ["apartmaji", "sobe"], "hr": ["apartmani", "sobe"], "en": ["holiday apartments"] },
+  "mapsCategories": ["Holiday apartment rental", "Guest house", "Bed & breakfast", "Holiday home"],
+  "schemaOrgType": "LodgingBusiness",
+  "templateGroup": "lodging",
+  "defaultServices": {
+    "sl": ["Apartmaji", "Sobe", "Parkirišče", "Brezplačen Wi-Fi", "Bližina morja"],
+    "hr": ["Apartmani", "Sobe", "Parking", "Besplatan Wi-Fi", "Blizina mora"],
+    "en": ["Apartments", "Rooms", "Parking", "Free Wi-Fi", "Close to the sea"]
+  },
+  "primaryCta": "form",
+  "imageQueries": ["seaside holiday apartment", "apartment terrace sea view"],
+  "valueTier": "high"
+}

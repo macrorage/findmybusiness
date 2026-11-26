@@ -1,0 +1,16 @@
+{
+  "id": "vodovodar",
+  "labels": { "sl": "Vodovodar", "hr": "Vodoinstalater", "en": "Plumber" },
+  "searchKeywords": { "sl": ["vodovodar", "vodoinštalater"], "hr": ["vodoinstalater"], "en": ["plumber"] },
+  "mapsCategories": ["Plumber", "Plumbing supply store", "Heating contractor"],
+  "schemaOrgType": "Plumber",
+  "templateGroup": "trades",
+  "defaultServices": {
+    "sl": ["Popravilo puščanja", "Montaža sanitarne opreme", "Odmašitev odtokov", "Ogrevanje in bojlerji", "Interventni posegi"],
+    "hr": ["Popravak curenja", "Montaža sanitarija", "Odčepljenje odvoda", "Grijanje i bojleri", "Hitne intervencije"],
+    "en": ["Leak repair", "Bathroom fittings", "Drain unblocking", "Heating and boilers", "Emergency call-outs"]
+  },
+  "primaryCta": "call",
+  "imageQueries": ["plumber fixing sink", "plumbing tools"],
+  "valueTier": "high"
+}

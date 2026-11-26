@@ -1,0 +1,16 @@
+{
+  "id": "kozmeticni-salon",
+  "labels": { "sl": "Kozmetični salon", "hr": "Kozmetički salon", "en": "Beauty salon" },
+  "searchKeywords": { "sl": ["kozmetični salon", "kozmetika"], "hr": ["kozmetički salon"], "en": ["beauty salon"] },
+  "mapsCategories": ["Beauty salon", "Nail salon", "Facial spa", "Waxing hair removal service"],
+  "schemaOrgType": "BeautySalon",
+  "templateGroup": "beauty",
+  "defaultServices": {
+    "sl": ["Nega obraza", "Manikura", "Pedikura", "Depilacija", "Masaža"],
+    "hr": ["Njega lica", "Manikura", "Pedikura", "Depilacija", "Masaža"],
+    "en": ["Facials", "Manicure", "Pedicure", "Waxing", "Massage"]
+  },
+  "primaryCta": "call",
+  "imageQueries": ["beauty salon interior", "manicure close up"],
+  "valueTier": "medium"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "frizer",
+  "labels": { "sl": "Frizerski salon", "hr": "Frizerski salon", "en": "Hair salon" },
+  "searchKeywords": { "sl": ["frizer", "frizerski salon"], "hr": ["frizer", "frizerski salon"], "en": ["hair salon"] },
+  "mapsCategories": ["Hair salon", "Barber shop", "Hairdresser"],
+  "schemaOrgType": "HairSalon",
+  "templateGroup": "beauty",
+  "defaultServices": {
+    "sl": ["Striženje", "Barvanje", "Pramenčki", "Feniranje", "Pričeske za posebne priložnosti"],
+    "hr": ["Šišanje", "Bojanje", "Pramenovi", "Feniranje", "Frizure za posebne prigode"],
+    "en": ["Haircuts", "Colouring", "Highlights", "Blow-dry", "Special-occasion styling"]
+  },
+  "primaryCta": "call",
+  "imageQueries": ["hair salon interior", "hairdresser cutting hair"],
+  "valueTier": "medium"
+}

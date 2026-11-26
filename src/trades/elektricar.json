@@ -1,0 +1,16 @@
+{
+  "id": "elektricar",
+  "labels": { "sl": "Električar", "hr": "Električar", "en": "Electrician" },
+  "searchKeywords": { "sl": ["električar", "elektroinštalacije"], "hr": ["električar", "elektroinstalacije"], "en": ["electrician"] },
+  "mapsCategories": ["Electrician", "Electrical installation service"],
+  "schemaOrgType": "Electrician",
+  "templateGroup": "trades",
+  "defaultServices": {
+    "sl": ["Elektroinštalacije", "Popravila", "Razsvetljava", "Pametna hiša", "Meritve električnih instalacij"],
+    "hr": ["Elektroinstalacije", "Popravci", "Rasvjeta", "Pametna kuća", "Mjerenja električnih instalacija"],
+    "en": ["Electrical installations", "Repairs", "Lighting", "Smart home", "Installation testing"]
+  },
+  "primaryCta": "call",
+  "imageQueries": ["electrician at work", "electrical panel"],
+  "valueTier": "high"
+}

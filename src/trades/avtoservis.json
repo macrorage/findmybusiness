@@ -1,0 +1,16 @@
+{
+  "id": "avtoservis",
+  "labels": { "sl": "Avtoservis", "hr": "Autoservis", "en": "Car repair" },
+  "searchKeywords": { "sl": ["avtoservis", "vulkanizer"], "hr": ["autoservis", "vulkanizer"], "en": ["car repair"] },
+  "mapsCategories": ["Auto repair shop", "Car repair and maintenance service", "Tire shop", "Mechanic"],
+  "schemaOrgType": "AutoRepair",
+  "templateGroup": "trades",
+  "defaultServices": {
+    "sl": ["Redni servis", "Menjava olja", "Popravilo zavor", "Računalniška diagnostika", "Menjava pnevmatik", "Servis klimatskih naprav"],
+    "hr": ["Redovni servis", "Zamjena ulja", "Popravak kočnica", "Računalna dijagnostika", "Zamjena guma", "Servis klima uređaja"],
+    "en": ["Regular service", "Oil change", "Brake repair", "Computer diagnostics", "Tyre change", "Air-conditioning service"]
+  },
+  "primaryCta": "call",
+  "imageQueries": ["car mechanic workshop", "mechanic repairing car"],
+  "valueTier": "high"
+}
