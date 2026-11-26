@@ -8,7 +8,7 @@
 ---
 
 ## ▶ In progress
-_Nothing. The next tool takes the top unblocked item from "Next up" (#8, Maps client)._
+_Nothing. The next tool takes the top unblocked item from "Next up" (#11, website checker)._
 
 <!-- Format when filled:
 **Task:** <name>  · **Owner:** <tool>  · **Started:** <date>
@@ -33,9 +33,10 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#8, Maps cl
 7. [x] `tests/golden/`: 10 **invented** businesses (`businesses.json`, 7 SL + 3 HR, every classifier outcome) + loader and validity tests. Shared listing shape: `src/lib/prospect.ts`.
 
 **Phase 1: prospect finder** (needs 👤 H1 for DataForSEO)
-8. [ ] `src/lib/maps/`: DataForSEO Google Maps search (trade + city → listings), cost estimate before the run, cache in the DB, dedupe (PRODUCT §5.1).
-9. [ ] `src/lib/classify/`: rule-based labels + phone type / contact channels via libphonenumber-js. Unit tests (PRODUCT §5.2).
-10. [ ] `src/lib/score/`: lead score with a breakdown. Unit tests (PRODUCT §5.3).
+8. [x] `src/lib/maps/`: DataForSEO Google Maps client (request, parsing, cost estimate), demo source for mock mode.
+   - [ ] Still open: first live run (👤 H1) to confirm the keyword strategy and that `language_code: "en"` gives English categories; DB cache (`api_cache`) and dedupe on save (needs Supabase).
+9. [x] `src/lib/classify/`: rule-based labels + phone type / contact channels via libphonenumber-js. Golden set passes.
+10. [x] `src/lib/score/`: lead score with a breakdown (PRODUCT §5.3).
 11. [ ] `src/lib/checker/`: website checks + Playwright screenshot → Gemini Flash outdated score (PRODUCT §5.4).
 12. [ ] UI: "Find prospects" page (trade dropdown in Slovenian + city) → ranked table with label badges, reasons, channels and cost.
 13. [ ] `src/lib/registry/`: **research only**: AJPES/ePRS and bizi.si access and terms → `docs/decisions/0001-registry-access.md`. No scraping.
@@ -97,6 +98,9 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#8, Maps cl
 | 2026-11-26 | UI i18n = typed dictionaries (`sl` is the source; `en: Dictionary` must match), language from `APP_LOCALE`, no locale routing | One Slovenian user in Phase 1; avoids dynamic per-request APIs; per-user locale in Phase 2 | claude |
 | 2026-11-26 | `Prospect` (src/lib/prospect.ts) is the one normalized listing shape every source must produce | Classifier, scorer and sitegen stay source-agnostic | claude |
 | 2026-11-26 | Classifier pre-check label `needs_check` for businesses with their own site; the checker (#11) turns it into `outdated` or `ok` before storing | DB stores only final labels | claude |
+| 2026-11-26 | One switch `AI_PROVIDER_MODE` (mock/live) controls AI **and** Maps data; mock Maps = deterministic "Demo …" businesses | One place to go live; UI demoable without keys | claude |
+| 2026-11-26 | DataForSEO query: keyword = local trade word + city, `location_name` = country, `language_code: "en"` | No dependency on exact DataForSEO city names; English categories match trade configs. Verify on first live run | claude |
+| 2026-11-26 | Chain rules: known-name list, ≥1000 reviews, or same name in ≥3 cities of one batch. Chat channels only for MOBILE numbers (libphonenumber-js `max` metadata) | Simple, testable first version; tune after validation | claude |
 | 2026-11-26 | No dentist/health trade yet | Healthcare advertising has extra rules; add after the legal check (H3) | claude |
 
 ---
@@ -110,6 +114,11 @@ _Nothing. The next tool takes the top unblocked item from "Next up" (#8, Maps cl
 - Left unfinished: ...
 - Next tool should: ...
 -->
+
+### 2026-11-26 · claude · Maps client, classifier, lead score (Next up #8–#10)
+- Did: `src/lib/maps/` (DataForSEO request + lenient parsing, cost estimate, demo source), `src/lib/classify/` (closed/chain/social/own-site rules, phone type + channels), `src/lib/score/` (points + breakdown). Fixed fake landline numbers in the golden set (some were really mobile prefixes). 27 new tests.
+- Verified: `pnpm check` passes (82 tests). No live DataForSEO call (H1).
+- Next tool should: start #11.
 
 ### 2026-11-26 · claude · Golden set (Next up #7)
 - Did: `src/lib/prospect.ts` (normalized listing), `tests/golden/` (10 invented businesses, README, loader, 4 tests).

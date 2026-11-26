@@ -19,6 +19,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^1.14.0",
     "@google/genai": "^3.6.1",
+    "libphonenumber-js": "^1.13.17",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
